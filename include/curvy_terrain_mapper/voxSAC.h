@@ -27,7 +27,7 @@ typedef pcl::PointCloud<PointNT> PointCloudN;
 typedef pcl::PointCloud<Normal> NormalCloud;
 typedef pcl::PointCloud<PointTC> PointCloudC;
 
-typedef boost::shared_ptr <std::vector<int> > IndicesPtr;
+typedef std::shared_ptr <std::vector<int> > IndicesPtr;
 
 typedef typename pcl::octree::OctreePointCloud<pcl::PointXYZ> OctreeT;
 typedef typename OctreeT::LeafContainer LeafContainer;

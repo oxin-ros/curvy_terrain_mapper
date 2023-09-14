@@ -23,7 +23,7 @@ void regions::createBorders()
 	}
 }
 
-void regions::showBorders(boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer)
+void regions::showBorders(std::shared_ptr<pcl::visualization::PCLVisualizer> viewer)
 {
 	int linesAdded = 0;
 	PointCloudC colored_cloud;
@@ -70,7 +70,7 @@ void regions::showBorders(boost::shared_ptr<pcl::visualization::PCLVisualizer> v
             pcl::ExtractIndices<PointT> eifilter (true); // Initializing with true will allow us to extract the removed indices
             eifilter.setInputCloud (linesCloud.makeShared());
 
-            boost::shared_ptr <std::vector<int> > remIndices (new std::vector<int>);
+            std::shared_ptr <std::vector<int> > remIndices (new std::vector<int>);
 
             for(int indIdx = 0; indIdx < inliers.size(); indIdx++)
             	remIndices->push_back(inliers[indIdx]);

@@ -52,11 +52,11 @@ Preanalysis::Preanalysis()
 
 
 void Preanalysis::run(
-    PointCloudT::Ptr& input, 
-    NormalCloud::Ptr& normal, 
-    PointCloudC& colMap, 
-    PointCloudT::Ptr& floorPoints, 
-    NormalCloud::Ptr& floorNormals, 
+    PointCloudT::Ptr& input,
+    NormalCloud::Ptr& normal,
+    PointCloudC& colMap,
+    PointCloudT::Ptr& floorPoints,
+    NormalCloud::Ptr& floorNormals,
     Eigen::Matrix4d& transformCloud
     )
 {
@@ -273,17 +273,17 @@ void Preanalysis::normalEstimation()
 
 	// Floor separation //
 //	std::vector<int> floorPoints;
-	boost::shared_ptr <std::vector<int> > flIndicesPtr (new std::vector<int>);
-	boost::shared_ptr <std::vector<int> > gpIndicesPtr (new std::vector<int>);
-	boost::shared_ptr <std::vector<int> > npIndicesPtr (new std::vector<int>);
+	std::shared_ptr <std::vector<int> > flIndicesPtr (new std::vector<int>);
+	std::shared_ptr <std::vector<int> > gpIndicesPtr (new std::vector<int>);
+	std::shared_ptr <std::vector<int> > npIndicesPtr (new std::vector<int>);
 
 //	std::vector<int>::pointer floorPtr;
 //	floorPtr = &floorPoints;
-	ne.getFloorIndices(*flIndicesPtr); 
+	ne.getFloorIndices(*flIndicesPtr);
 	ne.getGhostIndices(*gpIndicesPtr);
 	ne.getNormalIndices(*npIndicesPtr);
 
-	boost::shared_ptr <std::vector<int> > wholeIndicesPtr (new std::vector<int>);
+	std::shared_ptr <std::vector<int> > wholeIndicesPtr (new std::vector<int>);
 
 	wholeIndicesPtr->reserve( flIndicesPtr->size() + gpIndicesPtr->size() + npIndicesPtr->size()); // preallocate memory
 	wholeIndicesPtr->insert( wholeIndicesPtr->end(), flIndicesPtr->begin(), flIndicesPtr->end() );

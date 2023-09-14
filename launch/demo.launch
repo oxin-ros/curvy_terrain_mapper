@@ -8,9 +8,32 @@
 
     <arg name="fixed_frame_id" default="map"/>
     <arg name="child_frame_id" default="base_link"/>
-    <arg name="input_cloud_topic" default="/points"/>
-    
+    <arg name="input_topic" default="/livox/lidar"/>
+    <arg name="input_cloud_topic" default="/self_crop/output"/>
+
     <arg name="M_PI" value="3.14159265"/>
+
+
+    <!-- Run a cropbox filter to filter out points outisde of detection region. -->
+    <node pkg="nodelet" type="nodelet" name="crop_box"
+          args="standalone pcl/CropBox" output="screen" respawn="true">
+        <rosparam file="$(find obstacle_detection)/config/crop_box.yaml" command="load" />
+        <remap from="~input"  to="$(arg input_topic)"/>
+    </node>
+
+    <!-- Run a VoxelGrid filter to clean NaNs and downsample the data. -->
+    <node pkg="nodelet" type="nodelet" name="voxel_grid"
+          args="standalone pcl/VoxelGrid" output="screen" respawn="true">
+        <rosparam file="$(find obstacle_detection)/config/voxel_grid.yaml" command="load" />
+        <remap from="~input"  to="/crop_box/output" />
+    </node>
+
+    <!-- Remove self detections -->
+    <node pkg="nodelet" type="nodelet" name="self_crop"
+          args="standalone pcl/CropBox" output="screen" respawn="true">
+        <rosparam file="$(find obstacle_detection)/config/self_crop.yaml" command="load" />
+        <remap from="~input"  to="/voxel_grid/output"/>
+    </node>
 
 <!-- launch curvy_terrain_mapper -->
     <include file="$(find curvy_terrain_mapper)/launch/curvy_terrain_mapper.launch" if="$(arg enable_ctm)">
@@ -28,7 +51,25 @@
     </include>
 
     <group if="$(arg enable_octomap)">
-        <include file="$(find octomap_server)/launch/octomap_mapping_rough.launch" unless="$(arg enable_marble_mapping)">
+        <node pkg="octomap_server" type="octomap_server_node" name="octomap_server" output="screen" respawn="true">
+            <remap from="cloud_in" to="$(arg input_cloud_topic)/cost_norm_cloud/cropped" if="$(arg enable_crop)"/>
+            <remap from="cloud_in" to="$(arg input_cloud_topic)/cost_norm_cloud" unless="$(arg enable_crop)"/>
+            <param name="frame_id"                value="$(arg fixed_frame_id)"/>
+            <param name="base_frame_id"           value="$(arg child_frame_id)"/>
+            <rosparam>
+                filter_speckles: false
+                filter_ground: false
+                sensor_model/max_range: 20.0
+                resolution: 0.2
+                sensor_model/hit: 0.9
+                sensor_model/miss: 0.2
+                sensor_model/min: 0.12
+                sensor_model/max: 0.97
+                compress_map: true
+            </rosparam>
+        </node>
+
+        <!-- <include file="$(find octomap_server)/launch/octomap_mapping_rough.launch" unless="$(arg enable_marble_mapping)">
             <arg name="cloud_in"                value="$(arg input_cloud_topic)/cost_norm_cloud/cropped" if="$(arg enable_crop)"/>
             <arg name="cloud_in"                value="$(arg input_cloud_topic)/cost_norm_cloud" unless="$(arg enable_crop)"/>
             <arg name="frame_id"                value="$(arg fixed_frame_id)"/>
@@ -41,8 +82,8 @@
             <arg name="sensor_model/miss"       value="0.2"/>
             <arg name="sensor_model/min"        value="0.12"/>
             <arg name="sensor_model/max"        value="0.97"/>
-            <arg name="compress_map"            value="true"/> 
-        </include>
+            <arg name="compress_map"            value="true"/>
+        </include> -->
         <include file="$(find marble_mapping)/launch/marble_mapping.launch" if="$(arg enable_marble_mapping)">
             <arg name="cloud_in"                value="$(arg input_cloud_topic)/cost_norm_cloud/cropped" if="$(arg enable_crop)"/>
             <arg name="cloud_in"                value="$(arg input_cloud_topic)/cost_norm_cloud" unless="$(arg enable_crop)"/>

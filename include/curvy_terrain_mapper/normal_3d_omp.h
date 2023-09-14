@@ -54,8 +54,8 @@ namespace pcl
   class NormalEstimationOMP: public NormalEstimation<PointInT, PointOutT>
   {
     public:
-      typedef boost::shared_ptr<NormalEstimationOMP<PointInT, PointOutT> > Ptr;
-      typedef boost::shared_ptr<const NormalEstimationOMP<PointInT, PointOutT> > ConstPtr;
+      typedef std::shared_ptr<NormalEstimationOMP<PointInT, PointOutT> > Ptr;
+      typedef std::shared_ptr<const NormalEstimationOMP<PointInT, PointOutT> > ConstPtr;
       using NormalEstimation<PointInT, PointOutT>::feature_name_;
       using NormalEstimation<PointInT, PointOutT>::getClassName;
       using NormalEstimation<PointInT, PointOutT>::indices_;
@@ -144,7 +144,7 @@ namespace pcl
       /** \brief Initialize the scheduler and set the number of threads to use.
         * \param nr_threads the number of hardware threads to use (0 sets the value back to automatic)
         */
-      inline void 
+      inline void
       setNumberOfThreads (unsigned int nr_threads = 0) { threads_ = nr_threads; }
 
     protected:
@@ -156,7 +156,7 @@ namespace pcl
         * setSearchSurface () and the spatial locator in setSearchMethod ()
         * \param output the resultant point cloud model dataset that contains surface normals and curvatures
         */
-      void 
+      void
       computeFeature (PointCloudOut &output);
 
   };

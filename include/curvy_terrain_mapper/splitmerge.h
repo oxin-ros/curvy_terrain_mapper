@@ -33,7 +33,7 @@ typedef std::vector<int> Indices;
 typedef pcl::octree::OctreePointCloud<PointT> OctreeT;
 typedef typename OctreeT::LeafContainer LeafContainer;
 
-typedef boost::shared_ptr <std::vector<int> > IndicesPtr;
+typedef std::shared_ptr <std::vector<int> > IndicesPtr;
 
 
 
