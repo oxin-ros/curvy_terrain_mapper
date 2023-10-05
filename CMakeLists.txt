@@ -4,7 +4,7 @@ project(curvy_terrain_mapper)
 
 #SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++2a")
 
-find_package(PCL 1.8 REQUIRED)
+find_package(PCL QUIET REQUIRED)
 find_package(yaml-cpp REQUIRED)
 find_package(catkin REQUIRED
   COMPONENTS
@@ -41,7 +41,7 @@ generate_dynamic_reconfigure_options(
 #)
 
 catkin_package(
-  CATKIN_DEPENDS roscpp 
+  CATKIN_DEPENDS roscpp
   )
 
 include_directories(
@@ -57,15 +57,15 @@ add_definitions (${PCL_DEFINITIONS})
 
 add_executable( curvy_terrain_mapper_node
   src/curvy_terrain_mapper_node.cpp
-  src/preanalysis.cpp 
-  src/regions.cpp 
-  src/segmentPatch.cpp 
-  src/regiongrowing.cpp 
-  src/voxSAC.cpp 
-  src/splitmerge.cpp 
-  src/planeshape.cpp 
-  src/Stairs.cpp 
-  src/StairVector.cpp 
+  src/preanalysis.cpp
+  src/regions.cpp
+  src/segmentPatch.cpp
+  src/regiongrowing.cpp
+  src/voxSAC.cpp
+  src/splitmerge.cpp
+  src/planeshape.cpp
+  src/Stairs.cpp
+  src/StairVector.cpp
   src/recognition.cpp
   src/prediction.cpp
 )
